@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Card : MonoBehaviour
 {
@@ -24,10 +25,28 @@ public class Card : MonoBehaviour
         manaText.text = mana.ToString();
     }
 
-    private void Update()
+    public void UpdateAttack()
     {
         attackText.text = attack.ToString();
+        AnimateText(attackText);
+    }
+
+    public void UpdateHealth()
+    {
         healthText.text = health.ToString();
+        AnimateText(healthText);
+    }
+
+    public void UpdateMana()
+    {
         manaText.text = mana.ToString();
+        AnimateText(manaText);
+    }
+
+    private void AnimateText(Text text)
+    {
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(text.transform.DOScale(2f, 0.5f))
+            .Append(text.transform.DOScale(1f, 0.5f));
     }
 }

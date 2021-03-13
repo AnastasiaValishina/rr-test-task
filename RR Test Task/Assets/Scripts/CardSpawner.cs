@@ -66,14 +66,26 @@ public class CardSpawner : MonoBehaviour
         int randomValue = Random.Range(minValue, maxValue);
         int randomParameter = Random.Range(0, 2);
 
-        if (randomParameter == 0) { cardsAtHand[cardIndex].attack = randomValue; }
-        if (randomParameter == 1) { cardsAtHand[cardIndex].health = randomValue; }
-        if (randomParameter == 2) { cardsAtHand[cardIndex].mana = randomValue; }
+        if (randomParameter == 0) 
+        { 
+            cardsAtHand[cardIndex].attack = randomValue;
+            cardsAtHand[cardIndex].UpdateAttack();
+        }
+        if (randomParameter == 1) 
+        { 
+            cardsAtHand[cardIndex].health = randomValue;
+            cardsAtHand[cardIndex].UpdateHealth();
+        }
+        if (randomParameter == 2) 
+        { 
+            cardsAtHand[cardIndex].mana = randomValue;
+            cardsAtHand[cardIndex].UpdateMana();
+        }
 
         if (cardsAtHand[cardIndex].health < 1)
         {
             Destroy(cardsAtHand[cardIndex].gameObject);
-            cardsAtHand.RemoveAt(index: cardIndex);            
+            cardsAtHand.RemoveAt(index: cardIndex);
             SetPosition();
         }
     }
