@@ -15,6 +15,7 @@ public class CardSpawner : MonoBehaviour
     [SerializeField] int minValue = -2, maxValue = 9;
     float cardWidth = 200f;
     [SerializeField] float overlap = 100f;
+    [SerializeField] float height = 50f;
 
     void Start()
     {
@@ -32,7 +33,9 @@ public class CardSpawner : MonoBehaviour
     private void SetPosition()
     {
 
-        float offsetX = transform.position.x - cardsAtHand.Count * (cardWidth - overlap) / 2;
+        float offsetX = -1f * cardsAtHand.Count * (cardWidth - overlap) / 2f + overlap / 2f;
+        float totalY = cardsAtHand.Count * height;
+        float startY = -1f * (totalY / 2f - height / 2);
 
         for (int i = 0; i < cardsAtHand.Count; i++)
         {
@@ -49,10 +52,12 @@ public class CardSpawner : MonoBehaviour
             {
                 cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, 0f), 1f);
             }
-
+            
             float xPos = offsetX;
-            cardsAtHand[i].transform.DOMoveX(xPos, 1f);
+            float yPos = startY * Mathf.Sign(twistForThisCard);
+            cardsAtHand[i].transform.DOLocalMove(new Vector3(xPos, yPos, 0f), 1f);
             offsetX += overlap;
+            startY += height;
         }
     }
 
