@@ -12,37 +12,22 @@ public class Card : MonoBehaviour
     [SerializeField] Text manaText;
 
     [SerializeField] int minValue = -2, maxValue = 9;
-    [SerializeField] int attack = 5;
-    [SerializeField] int health = 5;
-    [SerializeField] int mana = 5;
-    [SerializeField] int[] values = new int[3];
+    public int attack = 5;
+    public int health = 5;
+    public int mana = 5;
+    public GameObject target;
+
     void Start()
     {
-        artImage.sprite = artArray[Random.Range(0, artArray.Length)];
-        values[0] = attack;
-        values[1] = health;
-        values[2] = mana;
-        attackText.text = values[0].ToString();
-        healthText.text = values[1].ToString();
-        manaText.text = values[2].ToString();
-    }
-
-    public void ChangeToRandomValue()
-    {
-        int randomValue = Random.Range(minValue, maxValue);
-        int randomParameter = Random.Range(0, 2);
-        values[randomParameter] = randomValue;
-
-        if (values[1] < 1)
-        {
-            Destroy(gameObject);
-        }
+        attackText.text = attack.ToString();
+        healthText.text = health.ToString();
+        manaText.text = mana.ToString();
     }
 
     private void Update()
     {
-        attackText.text = values[0].ToString();
-        healthText.text = values[1].ToString();
-        manaText.text = values[2].ToString();
+        attackText.text = attack.ToString();
+        healthText.text = health.ToString();
+        manaText.text = mana.ToString();
     }
 }
