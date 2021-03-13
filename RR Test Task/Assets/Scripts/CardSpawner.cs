@@ -8,12 +8,13 @@ public class CardSpawner : MonoBehaviour
 {
     [SerializeField] int minNumberOfCards = 4, maxNumberOfCards = 6;
     [SerializeField] Card cardPrefab;
-    [SerializeField] GameObject target;
 
     public List<Card> cardsAtHand = new List<Card>();
     public int cardIndex = 0;
 
     [SerializeField] int minValue = -2, maxValue = 9;
+    float cardWidth = 200f;
+    [SerializeField] float overlap = 100f;
 
     void Start()
     {
@@ -25,18 +26,33 @@ public class CardSpawner : MonoBehaviour
             cardsAtHand.Add(newCard);
         }
 
-        SetRotation();
+        SetPosition();
     }
 
-    private void SetRotation()
+    private void SetPosition()
     {
+
+        float offsetX = transform.position.x - cardsAtHand.Count * (cardWidth - overlap) / 2;
+
         for (int i = 0; i < cardsAtHand.Count; i++)
         {
             float totalTwist = -50f;
             float twistPerCard = totalTwist / cardsAtHand.Count;
             float startTwist = -1f * (totalTwist / 2f);
             float twistForThisCard = startTwist + (i * twistPerCard);
-            cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, twistForThisCard), 1f);
+
+            if (cardsAtHand.Count > 1)
+            {
+                cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, twistForThisCard), 1f);
+            }
+            else
+            {
+                cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, 0f), 1f);
+            }
+
+            float xPos = offsetX;
+            cardsAtHand[i].transform.DOMoveX(xPos, 1f);
+            offsetX += overlap;
         }
     }
 
@@ -52,9 +68,8 @@ public class CardSpawner : MonoBehaviour
         if (cardsAtHand[cardIndex].health < 1)
         {
             Destroy(cardsAtHand[cardIndex].gameObject);
-            cardsAtHand.RemoveAt(index: cardIndex);
-            
-            SetRotation();
+            cardsAtHand.RemoveAt(index: cardIndex);            
+            SetPosition();
         }
     }
 

@@ -15,10 +15,10 @@ public class Card : MonoBehaviour
     public int attack = 5;
     public int health = 5;
     public int mana = 5;
-    public GameObject target;
 
     void Start()
     {
+        artImage.sprite = artArray[Random.Range(0, artArray.Length)];
         attackText.text = attack.ToString();
         healthText.text = health.ToString();
         manaText.text = mana.ToString();
