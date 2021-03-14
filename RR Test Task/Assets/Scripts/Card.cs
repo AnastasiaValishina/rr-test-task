@@ -18,7 +18,7 @@ public class Card : MonoBehaviour
 
     void Start()
     {
-        artImage.sprite = artArray[Random.Range(0, artArray.Length)]; // загрузить арт из массива
+        artImage.sprite = artArray[Random.Range(0, artArray.Length)]; // load art from the array
         attackText.text = attack.ToString();
         healthText.text = health.ToString();
         manaText.text = mana.ToString();

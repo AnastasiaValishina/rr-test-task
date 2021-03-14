@@ -10,11 +10,17 @@ public class CardSpawner : MonoBehaviour
     public Card cardPrefab;
     public int minValue = -2, maxValue = 9;
 
+    [Header("Card positioning")]
+    [Tooltip("Overlap of cards along X axis")]
+    public float spacing = -50f;
+    [Tooltip("Distance between cards' pivots along Y axis")]
+    public float height = 20f;
+    [Tooltip("Angle between the first cards and the last")]
+    public float totalTwist = -70f;
+    public float cardWidth = 200f;
+
     List<Card> cardsAtHand = new List<Card>();
     int cardIndex = 0;
-    float spacing = -50f;
-    float height = 20f;
-    float cardWidth = 200f;
 
     void Start()
     {
@@ -44,7 +50,7 @@ public class CardSpawner : MonoBehaviour
         }
     }
 
-    private void ChangeToRandomValue() // изменить один рандомнай параметр на карте
+    private void ChangeToRandomValue() // Change one random value of the card
     {
         int randomValue = Random.Range(minValue, maxValue);
         int randomParameter = Random.Range(0, 2);
@@ -75,23 +81,24 @@ public class CardSpawner : MonoBehaviour
 
     private void SetPosition()
     {
-        // вычислить положение первой катры по x
-        float cardRealWidth = cardWidth + spacing;          // занимаемая ширина карты на поле (ширина карты минус нахлест)
+        // Calculate x of the first card
+        float cardRealWidth = cardWidth + spacing;                  // space of the card on the screen (card width minus overlap)
         float totalX = cardsAtHand.Count * cardRealWidth + spacing;
         float startX = -1f * ((totalX - cardWidth) / 2f - spacing);
 
-
-        // вычислить положение первой карты по y
+        // Calculate y of the first card
         float totalY = cardsAtHand.Count * height;
         float startY = -1f * (totalY / 2f - height / 2f);
 
+        // Calculate Rotation of the first card
+        float twistPerCard = totalTwist / cardsAtHand.Count;
+        float startZ = -1f * ((totalTwist / 2f) - twistPerCard / 2f);
+
         for (int i = 0; i < cardsAtHand.Count; i++)
         {
-            // вычислить Rotation
-            float totalTwist = -50f;
-            float twistPerCard = totalTwist / cardsAtHand.Count;
-            float startTwist = -1f * (totalTwist / 2f);
-            float twistForThisCard = startTwist + (i * twistPerCard);
+            float twistForThisCard = startZ + (i * twistPerCard);
+            float xPos = startX + (i * cardRealWidth);
+            float yPos = (startY + (i * height)) * Mathf.Sign(twistForThisCard);
 
             if (cardsAtHand.Count > 1)
             {
@@ -102,13 +109,7 @@ public class CardSpawner : MonoBehaviour
                 cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, 0f), 1f);
             }
 
-            float xPos = startX;
-            float yPos = startY * Mathf.Sign(twistForThisCard);
-
             cardsAtHand[i].transform.DOLocalMove(new Vector3(xPos, yPos, 0f), 1f);
-
-            startX += cardRealWidth;
-            startY += height;
         }
     }
 }
