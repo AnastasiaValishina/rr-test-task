@@ -6,19 +6,19 @@ using DG.Tweening;
 
 public class CardSpawner : MonoBehaviour
 {
-    [SerializeField] int minNumberOfCards = 4, maxNumberOfCards = 6;
-    [SerializeField] Card cardPrefab;
+    public int minNumberOfCards = 4, maxNumberOfCards = 6;
+    public Card cardPrefab;
+    public int minValue = -2, maxValue = 9;
 
-    public List<Card> cardsAtHand = new List<Card>();
-    public int cardIndex = 0;
-
-    [SerializeField] int minValue = -2, maxValue = 9;
+    List<Card> cardsAtHand = new List<Card>();
+    int cardIndex = 0;
+    float overlap = 100f;
+    float height = 20f;
     float cardWidth = 200f;
-    [SerializeField] float overlap = 100f;
-    [SerializeField] float height = 50f;
 
     void Start()
     {
+        // выдать игроку 4-6 карт
         int numberOfCards = Random.Range(minNumberOfCards, maxNumberOfCards);
 
         for (int i = 0; i <= numberOfCards; i++)
@@ -30,38 +30,21 @@ public class CardSpawner : MonoBehaviour
         SetPosition();
     }
 
-    private void SetPosition()
+    public void OnButtonClick()
     {
+        if (cardsAtHand.Count <= 0) { return; }
 
-        float offsetX = -1f * cardsAtHand.Count * (cardWidth - overlap) / 2f + overlap / 2f;
-        float totalY = cardsAtHand.Count * height;
-        float startY = -1f * (totalY / 2f - height / 2);
+        ChangeToRandomValue();
 
-        for (int i = 0; i < cardsAtHand.Count; i++)
+        cardIndex++;
+
+        if (cardIndex >= cardsAtHand.Count)
         {
-            float totalTwist = -50f;
-            float twistPerCard = totalTwist / cardsAtHand.Count;
-            float startTwist = -1f * (totalTwist / 2f);
-            float twistForThisCard = startTwist + (i * twistPerCard);
-
-            if (cardsAtHand.Count > 1)
-            {
-                cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, twistForThisCard), 1f);
-            }
-            else
-            {
-                cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, 0f), 1f);
-            }
-            
-            float xPos = offsetX;
-            float yPos = startY * Mathf.Sign(twistForThisCard);
-            cardsAtHand[i].transform.DOLocalMove(new Vector3(xPos, yPos, 0f), 1f);
-            offsetX += overlap;
-            startY += height;
+            cardIndex = 0;
         }
     }
 
-    private void ChangeToRandomValue()
+    private void ChangeToRandomValue() // изменить один рандомнай параметр на карте
     {
         int randomValue = Random.Range(minValue, maxValue);
         int randomParameter = Random.Range(0, 2);
@@ -90,14 +73,39 @@ public class CardSpawner : MonoBehaviour
         }
     }
 
-    public void OnButtonClick()
+    private void SetPosition()
     {
-        ChangeToRandomValue();
+        // вычислить положение первой катры по x
+        float offsetX = -1f * cardsAtHand.Count * (cardWidth - overlap) / 2f + overlap / 2f; 
 
-        cardIndex++;
-        if (cardIndex >= cardsAtHand.Count)
+        // вычислить положение первой карты по y
+        float totalY = cardsAtHand.Count * height;
+        float startY = -1f * (totalY / 2f - height / 2);
+
+        for (int i = 0; i < cardsAtHand.Count; i++)
         {
-            cardIndex = 0;
+            // вычислить Rotation
+            float totalTwist = -50f;
+            float twistPerCard = totalTwist / cardsAtHand.Count;
+            float startTwist = -1f * (totalTwist / 2f);
+            float twistForThisCard = startTwist + (i * twistPerCard);
+
+            if (cardsAtHand.Count > 1)
+            {
+                cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, twistForThisCard), 1f);
+            }
+            else
+            {
+                cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, 0f), 1f);
+            }
+
+            float xPos = offsetX;
+            float yPos = startY * Mathf.Sign(twistForThisCard);
+
+            cardsAtHand[i].transform.DOLocalMove(new Vector3(xPos, yPos, 0f), 1f);
+
+            offsetX += overlap;
+            startY += height;
         }
     }
 }

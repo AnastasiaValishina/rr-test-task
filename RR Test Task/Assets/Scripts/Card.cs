@@ -6,20 +6,19 @@ using DG.Tweening;
 
 public class Card : MonoBehaviour
 {
-    [SerializeField] Image artImage;
-    [SerializeField] Sprite[] artArray;
-    [SerializeField] Text attackText;
-    [SerializeField] Text healthText;
-    [SerializeField] Text manaText;
-
-    [SerializeField] int minValue = -2, maxValue = 9;
+    public Image artImage;
+    public Sprite[] artArray;
+    public Text attackText;
+    public Text healthText;
+    public Text manaText;
+    
     public int attack = 5;
     public int health = 5;
     public int mana = 5;
 
     void Start()
     {
-        artImage.sprite = artArray[Random.Range(0, artArray.Length)];
+        artImage.sprite = artArray[Random.Range(0, artArray.Length)]; // загрузить арт из массива
         attackText.text = attack.ToString();
         healthText.text = health.ToString();
         manaText.text = mana.ToString();
