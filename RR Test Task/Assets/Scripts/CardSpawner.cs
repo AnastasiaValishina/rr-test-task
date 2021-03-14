@@ -12,7 +12,7 @@ public class CardSpawner : MonoBehaviour
 
     List<Card> cardsAtHand = new List<Card>();
     int cardIndex = 0;
-    float overlap = 100f;
+    float spacing = -50f;
     float height = 20f;
     float cardWidth = 200f;
 
@@ -76,11 +76,14 @@ public class CardSpawner : MonoBehaviour
     private void SetPosition()
     {
         // вычислить положение первой катры по x
-        float offsetX = -1f * cardsAtHand.Count * (cardWidth - overlap) / 2f + overlap / 2f; 
+        float cardRealWidth = cardWidth + spacing;          // занимаемая ширина карты на поле (ширина карты минус нахлест)
+        float totalX = cardsAtHand.Count * cardRealWidth + spacing;
+        float startX = -1f * ((totalX - cardWidth) / 2f - spacing);
+
 
         // вычислить положение первой карты по y
         float totalY = cardsAtHand.Count * height;
-        float startY = -1f * (totalY / 2f - height / 2);
+        float startY = -1f * (totalY / 2f - height / 2f);
 
         for (int i = 0; i < cardsAtHand.Count; i++)
         {
@@ -99,12 +102,12 @@ public class CardSpawner : MonoBehaviour
                 cardsAtHand[i].transform.DORotate(new Vector3(0f, 0f, 0f), 1f);
             }
 
-            float xPos = offsetX;
+            float xPos = startX;
             float yPos = startY * Mathf.Sign(twistForThisCard);
 
             cardsAtHand[i].transform.DOLocalMove(new Vector3(xPos, yPos, 0f), 1f);
 
-            offsetX += overlap;
+            startX += cardRealWidth;
             startY += height;
         }
     }
